@@ -2,13 +2,11 @@ body {
 
     padding: 0;
     height: 100%;
-    
+    overflow: hidden;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-image: url("../assets/image/joker.jpeg");
-    background-repeat: no-repeat;
-    background-position: center;
-    object-fit: cover;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
