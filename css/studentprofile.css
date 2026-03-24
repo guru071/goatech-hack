@@ -2,11 +2,13 @@ body {
 
     padding: 0;
     height: 100%;
-    overflow: hidden;
+    
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f2f5f9;
-    display: flex;
+    background-image: url("../assets/image/joker.jpeg");
+    background-repeat: no-repeat;
+    background-position: center;
+    object-fit: cover;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -117,11 +119,4 @@ td {
     -webkit-backdrop-filter: blur(2px);
             animation: anima 10s  infinite;
 
-}
-
-video {
-    width: 100%;
-    height: 100vh;
-    object-fit: cover;
-    z-index: -1;
 }
