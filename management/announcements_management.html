@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOATECH – Announcements</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0a0f1e;
+            --bg2: #0f1629;
+            --card: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.08);
+
+            --blue: #63b3ed;
+            --teal: #4fd1c5;
+            --purple: #b794f4;
+            --pink: #f687b3;
+            --green: #68d391;
+            --red: #fc8181;
+
+            --text: #e2e8f0;
+            --muted: #718096;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .header h1 span {
+            background: linear-gradient(90deg, var(--blue), var(--teal));
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 20px;
+        }
+
+        /* Card */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        /* Form */
+        label {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg2);
+            color: var(--text);
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--blue);
+        }
+
+        /* Button */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--blue), var(--teal));
+            color: #000;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Announcement list */
+        .announcement {
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: var(--bg2);
+        }
+
+        .announcement h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .announcement p {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 6px 0;
+        }
+
+        .meta {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--blue);
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background: rgba(99, 179, 237, 0.15);
+            color: var(--blue);
+            margin-top: 5px;
+        }
+
+        /* Message */
+        .msg {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>📢 <span>Announcements</span></h1>
+            <p style="color:var(--muted)">Create and manage announcements for students</p>
+        </div>
+
+        <div class="grid">
+
+            <!-- Create Announcement -->
+            <div class="card">
+                <h3>Create Announcement</h3>
+
+                <label>Title</label>
+                <input type="text" id="title" placeholder="Enter title">
+
+                <label>Category</label>
+                <select id="category">
+                    <option>General</option>
+                    <option>Exam</option>
+                    <option>Event</option>
+                    <option>Urgent</option>
+                </select>
+
+                <label>Message</label>
+                <textarea id="message" rows="4" placeholder="Write announcement..."></textarea>
+
+                <label>Audience</label>
+                <select id="audience">
+                    <option>All Students</option>
+                    <option>CSE</option>
+                    <option>ECE</option>
+                    <option>IT</option>
+                </select>
+
+                <button class="btn" onclick="postAnnouncement()">🚀 Post Announcement</button>
+
+                <div id="msg" class="msg"></div>
+            </div>
+
+            <!-- Announcement Feed -->
+            <div class="card">
+                <h3>Recent Announcements</h3>
+
+                <div id="feed"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        function postAnnouncement() {
+            const title = document.getElementById("title").value;
+            const message = document.getElementById("message").value;
+            const category = document.getElementById("category").value;
+            const audience = document.getElementById("audience").value;
+            const msgBox = document.getElementById("msg");
+
+            if (!title || !message) {
+                msgBox.style.color = "var(--red)";
+                msgBox.textContent = "⚠ Fill all fields!";
+                return;
+            }
+
+            const feed = document.getElementById("feed");
+
+            const date = new Date().toLocaleString();
+
+            feed.innerHTML =
+                `<div class="announcement">
+        <h3>${title}</h3>
+        <p>${message}</p>
+        <div class="meta">${date} • ${audience}</div>
+        <div class="tag">${category}</div>
+    </div>` + feed.innerHTML;
+
+            msgBox.style.color = "var(--green)";
+            msgBox.textContent = "✔ Announcement Posted!";
+
+            document.getElementById("title").value = "";
+            document.getElementById("message").value = "";
+
+            setTimeout(() => msgBox.textContent = "", 3000);
+        }
+
+    </script>
+
+</body>
+
+</html>

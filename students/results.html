@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GOATECH – Results</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg:#0f0a1f;
+    --surface:rgba(255,255,255,0.05);
+    --border:rgba(255,255,255,0.1);
+    --primary:#a855f7;
+    --secondary:#ec4899;
+    --accent:#22c55e;
+    --danger:#ef4444;
+    --text:#f1f5f9;
+    --muted:#94a3b8;
+}
+
+body {
+    margin:0;
+    font-family:'DM Sans',sans-serif;
+    background: radial-gradient(circle at top, #1e1b4b, #0f0a1f);
+    color:var(--text);
+}
+
+/* Topbar */
+.topbar {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 30px;
+    border-bottom:1px solid var(--border);
+    background:rgba(255,255,255,0.03);
+    backdrop-filter:blur(10px);
+}
+
+.title {
+    font-family:'Syne',sans-serif;
+    font-size:22px;
+    font-weight:800;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.back-btn {
+    padding:8px 16px;
+    border-radius:8px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--text);
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.back-btn:hover {
+    border-color:var(--primary);
+    box-shadow:0 0 10px var(--primary);
+}
+
+/* Container */
+.container {
+    padding:30px;
+}
+
+/* Summary cards */
+.summary {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.card {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    transition:0.3s;
+}
+
+.card:hover {
+    transform:translateY(-4px);
+    box-shadow:0 0 20px rgba(168,85,247,0.2);
+    border-color:var(--primary);
+}
+
+.value {
+    font-family:'Syne',sans-serif;
+    font-size:30px;
+    font-weight:800;
+}
+
+.label {
+    font-size:13px;
+    color:var(--muted);
+}
+
+/* Table */
+table {
+    width:100%;
+    border-collapse:collapse;
+}
+
+th, td {
+    padding:14px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+}
+
+th {
+    color:var(--primary);
+    font-weight:600;
+}
+
+td {
+    font-size:14px;
+}
+
+/* Grade Colors */
+.pass { color:var(--accent); }
+.avg { color:var(--secondary); }
+.fail { color:var(--danger); }
+
+/* Row Hover */
+tr:hover {
+    background:rgba(168,85,247,0.08);
+}
+
+/* Subtle glow for table */
+.card table {
+    border-radius:10px;
+    overflow:hidden;
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .container{
+        padding:20px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+    <div class="title">📊 Semester Results</div>
+    <button class="back-btn" onclick="goBack()">← Back</button>
+</div>
+
+<div class="container">
+
+    <!-- Summary -->
+    <div class="summary">
+        <div class="card">
+            <div class="value" style="color:var(--green)">8.2</div>
+            <div class="label">CGPA</div>
+        </div>
+
+        <div class="card">
+            <div class="value" style="color:var(--cyan)">82%</div>
+            <div class="label">Overall Percentage</div>
+        </div>
+
+        <div class="card">
+            <div class="value" style="color:var(--amber)">B+</div>
+            <div class="label">Grade</div>
+        </div>
+
+        <div class="card">
+            <div class="value" style="color:var(--green)">PASS</div>
+            <div class="label">Status</div>
+        </div>
+    </div>
+
+    <!-- Result Table -->
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Code</th>
+                    <th>Marks</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="resultTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+
+// Sample Results Data
+const results = [
+    { subject:"Data Structures", code:"CS301", marks:85 },
+    { subject:"Computer Networks", code:"CS302", marks:72 },
+    { subject:"DBMS", code:"CS303", marks:90 },
+    { subject:"Operating Systems", code:"CS304", marks:60 },
+    { subject:"Maths IV", code:"MA401", marks:78 }
+];
+
+const table = document.getElementById("resultTable");
+
+// Grade Logic
+function getGrade(marks){
+    if(marks >= 85) return {grade:"A+", class:"pass"};
+    if(marks >= 70) return {grade:"B+", class:"avg"};
+    if(marks >= 50) return {grade:"C", class:"avg"};
+    return {grade:"F", class:"fail"};
+}
+
+// Render Table
+results.forEach(r => {
+    const g = getGrade(r.marks);
+
+    table.innerHTML += `
+    <tr>
+        <td>${r.subject}</td>
+        <td>${r.code}</td>
+        <td>${r.marks}</td>
+        <td class="grade ${g.class}">${g.grade}</td>
+        <td class="${g.class}">${g.grade === 'F' ? 'Fail' : 'Pass'}</td>
+    </tr>`;
+});
+
+// Back
+function goBack(){
+    window.location.href = "student_dashboard.html";
+}
+
+</script>
+
+</body>
+</html>

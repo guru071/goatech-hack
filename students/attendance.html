@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Attendance Dashboard</title>
+
+<style>
+body {
+    
+    font-family: 'Segoe UI', sans-serif;
+    margin: 20px;
+    background: #022855;
+}
+
+h1 {
+    text-align: center;
+}
+
+/* Controls */
+#controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+button {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #02026d;
+    color: white;
+    cursor: pointer;
+}
+
+button.active {
+    background: orange;
+}
+
+select {
+    padding: 6px;
+}
+
+/* Layout */
+#outer {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+/* Cards */
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Info */
+#info table {
+    width: 100%;
+}
+
+.bar {
+    height: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.present { background: green; }
+.absent { background: red; }
+.od { background: orange; }
+
+/* Extra panel */
+#extras {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+/* Status */
+.status {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Warning */
+.warning {
+    color: red;
+}
+
+/* Responsive */
+@media(max-width: 900px){
+    #outer {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>📊 Smart Attendance Dashboard</h1>
+
+<div id="controls">
+    <button id="overallBtn" class="active">Overall</button>
+    <button id="monthBtn">Monthly</button>
+    <button id="barBtn" class="active">Bar</button>
+    <button id="pieBtn">Pie</button>
+
+    <select id="monthSelect" disabled>
+        <option value="jan">January</option>
+        <option value="feb">February</option>
+        <option value="mar">March</option>
+    </select>
+</div>
+
+<div id="outer">
+
+    <!-- LEFT -->
+    <div>
+        <div id="myPlot" class="card"></div>
+        <div id="trendChart" class="card"></div>
+    </div>
+
+    <!-- RIGHT -->
+    <div id="extras">
+
+        <div id="info" class="card">
+            <table>
+                <tr><td>Present</td><td id="present"></td></tr>
+                <tr><td>Absent</td><td id="absent"></td></tr>
+                <tr><td>On Duty</td><td id="od"></td></tr>
+            </table>
+
+            <div>Present %</div>
+            <div id="pBar" class="bar present"></div>
+
+            <div>Absent %</div>
+            <div id="aBar" class="bar absent"></div>
+
+            <div>OD %</div>
+            <div id="oBar" class="bar od"></div>
+        </div>
+
+        <div class="card">
+            <div><b>📈 Attendance %</b></div>
+            <div id="percent"></div>
+            <div class="status" id="status"></div>
+        </div>
+
+        <div class="card">
+            <div><b>⚠ Alerts</b></div>
+            <div id="alertBox"></div>
+        </div>
+
+        <div class="card">
+            <div><b>📌 Insights</b></div>
+            <ul id="insights"></ul>
+        </div>
+
+        <div class="card">
+            <div><b>⏱ Last Updated</b></div>
+            <div id="time"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const dataSet = {
+    overall: { present: 75, absent: 15, od: 10 },
+    jan: { present: 25, absent: 5, od: 2 },
+    feb: { present: 30, absent: 7, od: 3 },
+    mar: { present: 20, absent: 3, od: 5 }
+};
+
+let mode = "overall";
+let chartType = "bar";
+
+function update(data) {
+    let total = data.present + data.absent + data.od;
+
+    let p = (data.present / total) * 100;
+    let a = (data.absent / total) * 100;
+    let o = (data.od / total) * 100;
+
+    // Table
+    present.innerText = data.present;
+    absent.innerText = data.absent;
+    od.innerText = data.od;
+
+    // Bars
+    pBar.style.width = p + "%";
+    aBar.style.width = a + "%";
+    oBar.style.width = o + "%";
+
+    // Main Chart
+    let plotData = chartType === "bar" ? [{
+        x: ["Present","Absent","OD"],
+        y: [data.present,data.absent,data.od],
+        type: "bar",
+        marker: {color:["green","red","orange"]}
+    }] : [{
+        labels:["Present","Absent","OD"],
+        values:[data.present,data.absent,data.od],
+        type:"pie"
+    }];
+
+    Plotly.newPlot("myPlot", plotData);
+
+    // Trend chart
+    Plotly.newPlot("trendChart", [{
+        x:["Jan","Feb","Mar"],
+        y:[
+            dataSet.jan.present,
+            dataSet.feb.present,
+            dataSet.mar.present
+        ],
+        type:"scatter",
+        mode:"lines+markers"
+    }], {title:"Monthly Trend"});
+
+    // Percentage card
+    percent.innerText = p.toFixed(1) + "%";
+
+    if (p > 75) status.innerText = "✅ Good";
+    else if (p > 50) status.innerText = "⚠ Average";
+    else status.innerText = "❌ Poor";
+
+    // Alerts
+    alertBox.innerHTML = p < 75 
+        ? "<span class='warning'>Low attendance! Maintain above 75%</span>" 
+        : "No issues";
+
+    // Insights
+    insights.innerHTML = `
+        <li>Highest: ${Math.max(data.present, data.absent, data.od)}</li>
+        <li>Lowest: ${Math.min(data.present, data.absent, data.od)}</li>
+        <li>Total Days: ${total}</li>
+    `;
+
+    // Time
+    time.innerText = new Date().toLocaleString();
+}
+
+function getCurrent() {
+    return mode === "overall" ? dataSet.overall : dataSet[monthSelect.value];
+}
+
+// Init
+update(dataSet.overall);
+
+// Controls
+overallBtn.onclick = () => {
+    mode = "overall";
+    monthSelect.disabled = true;
+    update(getCurrent());
+};
+
+monthBtn.onclick = () => {
+    mode = "month";
+    monthSelect.disabled = false;
+    update(getCurrent());
+};
+
+monthSelect.onchange = () => update(getCurrent());
+
+barBtn.onclick = () => {
+    chartType = "bar";
+    update(getCurrent());
+};
+
+pieBtn.onclick = () => {
+    chartType = "pie";
+    update(getCurrent());
+};
+</script>
+
+</body>
+</html>

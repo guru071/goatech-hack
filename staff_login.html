@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #020617;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        button {
+            width: 95%;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            box-shadow: 0 0 12px rgb(19, 190, 206);
+            transform: scale(1.05);
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        video {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+        }
+    </style>
+
+    <title>Staff Login</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2> Staff Login</h2>
+
+        <input type="text" id="staffId" placeholder="Enter Staff ID">
+        <input type="password" id="password" placeholder="Enter Password">
+
+        <button onclick="login()">Login</button>
+
+        <div class="error" id="errorMsg"></div>
+    </div>
+
+    <video autoplay muted loop>
+        <source src="water.mp4" type="video/mp4">
+    </video>
+
+    <script>
+        // Dummy staff database (for prototype)
+        const staffUsers = [
+            { id: "STAFF001", password: "pass123" },
+            { id: "STAFF002", password: "admin456" }
+        ];
+
+        function login() {
+            const staffId = document.getElementById("staffId").value;
+            const password = document.getElementById("password").value;
+            const errorMsg = document.getElementById("errorMsg");
+
+            // Validation
+            if (staffId === "" || password === "") {
+                errorMsg.textContent = "Please fill all fields";
+                return;
+            }
+
+            // Authentication check
+            const user = staffUsers.find(
+                s => s.id === staffId && s.password === password
+            );
+
+            if (user) {
+                // Store session
+                sessionStorage.setItem("staffLoggedIn", "true");
+                sessionStorage.setItem("staffId", staffId);
+
+                // Redirect
+                window.location.href = "staff_dashboard.html";
+            } else {
+                errorMsg.textContent = "Invalid Staff ID or Password";
+            }
+        }
+    </script>
+
+</body>
+
+</html>

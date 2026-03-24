@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Connect JavaScript -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tn Voting System</title>
+
+
+
+    <style>
+        /* MAIN CONTAINER */
+        body {
+            display: flex;
+            background: linear-gradient(90deg, #c21e65, #d100d1, #023e7d);
+            color: white;
+            font-family: 'Syne', sans-serif;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+            
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1000px;
+            background-color: rgba(225, 225, 225, 0.15);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+            animation: fadeIn .6s ease;
+        }
+
+        p {
+            background-color: rgba(225, 225, 225, 0.15);
+
+            text-align: center;
+            color: #0d47a1;
+            font-size: 36px;
+            font-weight: bold;
+            text-shadow: 0 0 10px aqua,
+                0 0 10px aqua,
+                0 0 10px aqua,
+                0 0 10px aqua;
+        }
+
+        /* TABLE */
+
+        .table-box {
+            background-color: rgba(225, 225, 225, 0.005);
+            height: 100vh;
+
+            overflow-x: auto;
+            margin-top: 25px;
+        }
+
+        table {
+            background-color: rgba(225, 225, 225, 0.005);
+
+            width: 100%;
+            height: 100vh;
+            border-collapse: collapse;
+        }
+
+
+        td {
+            background-color: rgba(225, 225, 225, 0.005);
+
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        /* ROW EFFECT */
+
+        tr.candidate-row {
+            background-color: rgba(225, 225, 225, 0.005);
+
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        tr.candidate-row:hover {
+            box-shadow: 0 0 10px white,
+                0 0 5px white,
+                0 0 5px white,
+                0 0 5px white;
+            background-color: rgba(225, 225, 225, 0.15);
+        }
+
+        tr.candidate-row.selected {
+            background-color: rgba(225, 225, 225, 0.15);
+            transform: scale(1.01);
+        }
+
+        /* IMAGES */
+
+        table img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            transition: .3s;
+        }
+
+        tr:hover img {
+            transform: scale(1.1);
+        }
+
+        /* BUTTONS */
+
+        .buttons {
+            background-color: rgba(225, 225, 225, 0.15);
+
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: rgba(225, 225, 225, 0.15);
+
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        #voteBtn {
+            background-color: rgba(225, 225, 225, 0.15);
+
+            background: #ffa000;
+            color: white;
+            box-shadow: 0 0 10px #e2c695,
+                0 0 10px #e2c695,
+                0 0 10px #e2c695,
+                0 0 10px #e2c695;
+        }
+
+        #submitBtn {
+            background-color: rgba(225, 225, 225, 0.15);
+
+            background: #1976d2;
+            color: white;
+            box-shadow: 0 0 10px #7ca3de,
+                0 0 10px #7ca3de,
+                0 0 10px #7ca3de,
+                0 0 10px #7ca3de;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            opacity: .9;
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        /* MESSAGE */
+
+        #message {
+            background-color: rgba(225, 225, 225, 0.15);
+
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .info {
+            color: orange;
+        }
+
+        /* ANIMATION */
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <p>CR Voting System</p>
+
+        <div class="table-box">
+
+            <table>
+
+                <thead>
+                    <tr class="header">
+                        <th>Select</th>
+                        <th>Party</th>
+                        <th>Flag</th>
+                        <th>Symbol</th>
+                        <th>Leader</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr class="candidate-row" data-party="DMK" data-leader="M K Stalin">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr1</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img src=""></td>
+                        <td>cr1</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="TVK" data-leader="Vijay">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr2</td>
+                        <td><img src=""></td>
+                        <td><img src=""></td>
+                        <td>cr2</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="AIADMK" data-leader="Edappadi">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr3</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr3</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="NTK" data-leader="Seeman">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr4</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr4</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="BJP" data-leader="Nainar Nagenthran">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr5</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr5</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="CONGRESS" data-leader="K.Selvaperunthagai">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr6</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr6 </td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="COMMUNIST" data-leader="M.Veerapandian">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr7</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr7</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="VCK" data-leader="Thirumavalavan">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr8</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr8</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="AMMK" data-leader="TTV Dhinakaran">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr9</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr9</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="PMK" data-leader="Anbumani Ramadoss">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr10</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr10</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="DMDK" data-leader="Premallatha Vijayakant">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr11</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr11</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="MNM" data-leader="Kamal Haasan">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr12</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr12</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="MDMK" data-leader="Vaiko">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr13</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr13</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="AISMK" data-leader="Sarathkumar">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr14</td>
+                        <td><img
+                                src="h">
+                        </td>
+                        <td><img src=""></td>
+                        <td>cr14</td>
+                    </tr>
+
+                    <tr class="candidate-row" data-party="TMC" data-leader="G.K.Vasan">
+                        <td><input type="radio" name="vote"></td>
+                        <td>cr15</td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td><img
+                                src="">
+                        </td>
+                        <td>cr15</td>
+                    </tr>
+                    <tr class="candidate-row" data-party="NOTA" data-leader="NIL">
+                        <td><input type="radio" name="vote"></td>
+
+                        <td>cr16</td>
+                        <td></td>
+                        <td><img
+                                src="">
+                        </td>
+
+                        <td>cr16</td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button id="voteBtn">Vote</button>
+            <button id="submitBtn" disabled>Submit Vote</button>
+
+        </div>
+
+
+        <div id="message"></div>
+
+    </div>
+
+
+
+
+</body>
+
+</html>

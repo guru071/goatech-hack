@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOATECH – Management Dashboard</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Figtree:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #07080f;
+            --bg2: #0d0f1c;
+            --bg3: #111327;
+            --surface: rgba(255, 255, 255, 0.035);
+            --surface2: rgba(255, 255, 255, 0.065);
+            --border: rgba(255, 255, 255, 0.07);
+            --border-gold: rgba(212, 175, 55, 0.35);
+
+            --gold: #d4af37;
+            --gold-light: #f0d060;
+            --gold-dim: rgba(212, 175, 55, 0.1);
+            --gold-glow: rgba(212, 175, 55, 0.25);
+
+            --emerald: #50c878;
+            --emerald-dim: rgba(80, 200, 120, 0.1);
+            --rose: #e87d7d;
+            --rose-dim: rgba(232, 125, 125, 0.1);
+            --sapphire: #6fa3ef;
+            --sapphire-dim: rgba(111, 163, 239, 0.1);
+            --violet: #b07ffb;
+            --violet-dim: rgba(176, 127, 251, 0.1);
+            --amber: #f5a623;
+
+            --text: #e8e4d8;
+            --muted: #6b6878;
+            --muted2: #3d3b4f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Luxury ambient */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 50% 40% at 20% 10%, rgba(212, 175, 55, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 35% at 80% 85%, rgba(176, 127, 251, 0.04) 0%, transparent 55%),
+                radial-gradient(ellipse 35% 30% at 60% 40%, rgba(80, 200, 120, 0.03) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Diagonal line texture */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: repeating-linear-gradient(-45deg,
+                    transparent,
+                    transparent 30px,
+                    rgba(212, 175, 55, 0.012) 30px,
+                    rgba(212, 175, 55, 0.012) 31px);
+            pointer-events: none;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: rgba(7, 8, 15, 0.92);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            backdrop-filter: blur(30px);
+        }
+
+        .sb-head {
+            padding: 28px 24px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sb-emblem {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .emblem-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--gold), #8b6914);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .emblem-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--gold-light), var(--gold));
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .brand-sub {
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .mgmt-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--gold);
+            background: var(--gold-dim);
+            border: 1px solid var(--border-gold);
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mgmt-chip::before {
+            content: '◆';
+            font-size: 7px;
+        }
+
+        .nav-section {
+            padding: 18px 16px 0;
+        }
+
+        .nav-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted2);
+            padding: 0 6px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            transition: all 0.2s;
+            margin-bottom: 2px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: var(--gold-dim);
+            color: var(--gold);
+        }
+
+        .nav-item .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-pip {
+            margin-left: auto;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+        }
+
+        .sb-profile {
+            margin-top: auto;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.07), rgba(212, 175, 55, 0.02));
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+        }
+
+        .mgmt-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--gold), #7a5c0a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--bg);
+        }
+
+        .pr-info .pr-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .pr-info .pr-role {
+            font-size: 10px;
+            color: var(--gold);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .pr-dot {
+            margin-left: auto;
+            width: 8px;
+            height: 8px;
+            background: var(--emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 7px var(--emerald);
+        }
+
+        /* ── MAIN ── */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 34px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(7, 8, 15, 0.75);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .tb-left .tb-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .tb-left .tb-sub {
+            font-size: 11px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 3px;
+        }
+
+        .tb-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tb-tag {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--gold);
+            background: var(--gold-dim);
+            border: 1px solid var(--border-gold);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        .tb-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: border-color 0.2s;
+            position: relative;
+        }
+
+        .tb-icon:hover {
+            border-color: var(--gold);
+        }
+
+        .tb-icon .pip {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 7px;
+            height: 7px;
+            background: var(--rose);
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+        }
+
+        /* ── CONTENT ── */
+        .content {
+            padding: 30px 34px;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Command banner */
+        .cmd-banner {
+            border-radius: 20px;
+            border: 1px solid var(--border-gold);
+            background: linear-gradient(130deg, rgba(212, 175, 55, 0.09) 0%, rgba(212, 175, 55, 0.03) 50%, rgba(176, 127, 251, 0.04) 100%);
+            padding: 28px 32px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            animation: fadeUp 0.3s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cmd-banner::before {
+            content: '◆ GOATECH ◆';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Playfair Display', serif;
+            font-size: 80px;
+            font-weight: 800;
+            color: rgba(212, 175, 55, 0.04);
+            white-space: nowrap;
+            pointer-events: none;
+            letter-spacing: 8px;
+        }
+
+        .cmd-banner h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .cmd-banner h1 em {
+            font-style: normal;
+            background: linear-gradient(90deg, var(--gold-light), var(--gold));
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cmd-banner p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .kpi-strip {
+            display: flex;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+
+        .kpi {
+            background: rgba(7, 8, 15, 0.6);
+            border: 1px solid var(--border-gold);
+            border-radius: 14px;
+            padding: 14px 18px;
+            text-align: center;
+            min-width: 84px;
+        }
+
+        .kpi .kv {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .kpi .kl {
+            font-size: 9px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        /* Metric cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 26px;
+        }
+
+        .mcard {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            transition: border-color 0.2s, transform 0.2s;
+            animation: fadeUp 0.4s ease both;
+            cursor: default;
+        }
+
+        .mcard:hover {
+            border-color: var(--border-gold);
+            transform: translateY(-2px);
+        }
+
+        .mcard .mc-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            margin-bottom: 12px;
+        }
+
+        .mcard .mc-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 26px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .mcard .mc-label {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 5px;
+        }
+
+        .mcard .mc-delta {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .mc-bar {
+            height: 3px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .mc-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        /* Section header */
+        .sh {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sh::before {
+            content: '◆';
+            font-size: 7px;
+        }
+
+        .sh::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-gold), transparent);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            animation: fadeUp 0.4s ease both;
+        }
+
+        .card-h {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .card-h .ch-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .card-h .ch-tag {
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--muted);
+            background: var(--surface2);
+            padding: 3px 9px;
+            border-radius: 8px;
+        }
+
+        /* Grid layouts */
+        .g2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .g3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .g13 {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        /* Department rows */
+        .dept-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dept-row:last-child {
+            border-bottom: none;
+        }
+
+        .dept-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .dept-name {
+            flex: 1;
+        }
+
+        .dept-name .dn {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .dept-name .ds {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .dept-att {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .dept-bar-wrap {
+            width: 90px;
+        }
+
+        .dept-mini-bar {
+            height: 5px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dept-mini-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        /* Analytics donut SVG */
+        .donut-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            padding: 8px 0;
+        }
+
+        .donut-leg {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .leg-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .leg-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Vote card */
+        .vote-item {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .vote-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .vote-q {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .vote-opt {
+            margin-bottom: 8px;
+        }
+
+        .vote-opt .vo-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .vote-opt .vo-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .vote-opt .vo-fill {
+            height: 100%;
+            border-radius: 6px;
+        }
+
+        .vote-meta {
+            font-size: 11px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 10px;
+        }
+
+        .status-pill {
+            display: inline-block;
+            font-size: 10px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Staff table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            text-align: left;
+            padding: 0 10px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 11px 10px;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: var(--surface2);
+        }
+
+        .tbl-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            background: linear-gradient(135deg, var(--gold), #7a5c0a);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--bg);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tbl-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Announcement composer */
+        .ann-form input,
+        .ann-form select,
+        .ann-form textarea {
+            width: 100%;
+            padding: 10px 13px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg2);
+            color: var(--text);
+            font-size: 13px;
+            font-family: 'Figtree', sans-serif;
+            outline: none;
+            margin-bottom: 10px;
+            transition: border-color 0.2s;
+        }
+
+        .ann-form input:focus,
+        .ann-form select:focus,
+        .ann-form textarea:focus {
+            border-color: var(--gold);
+        }
+
+        .ann-form label {
+            font-size: 11px;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .gold-btn {
+            width: 100%;
+            padding: 11px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, var(--gold), #8b6c1a);
+            color: var(--bg);
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Figtree', sans-serif;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s;
+            letter-spacing: 0.3px;
+        }
+
+        .gold-btn:hover {
+            opacity: 0.88;
+            transform: scale(1.01);
+        }
+
+        /* Recent alerts */
+        .alert-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .alert-body .ab-title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .alert-body .ab-desc {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+            line-height: 1.5;
+        }
+
+        .alert-body .ab-time {
+            font-size: 10px;
+            color: var(--muted2);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 4px;
+        }
+
+        /* KPI trend line (SVG mini chart) */
+        .mini-chart {
+            display: block;
+            margin-top: 8px;
+        }
+
+        /* Resource utilization bars */
+        .res-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .res-label {
+            font-size: 12px;
+            font-weight: 500;
+            width: 110px;
+            flex-shrink: 0;
+        }
+
+        .res-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .res-fill {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 1.2s ease;
+        }
+
+        .res-pct {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            width: 36px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-gold);
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .metrics-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1000px) {
+
+            .g2,
+            .g3,
+            .g13 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .topbar {
+                padding: 14px 18px;
+            }
+
+            .kpi-strip {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- ── SIDEBAR ── -->
+        <aside class="sidebar">
+            <div class="sb-head">
+                <div class="sb-emblem">
+                    <div class="emblem-icon">🏛️</div>
+                    <div class="emblem-text">
+                        <div class="brand-name">GOATECH</div>
+                        <div class="brand-sub">Smart College Management</div>
+                    </div>
+                </div>
+                <div class="mgmt-chip">Management Command</div>
+            </div>
+
+            <nav class="nav-section">
+                <div class="nav-label">Command Centre</div>
+                <a class="nav-item active" href="#">
+                    <span class="icon">⊞</span> Overview Dashboard <div class="nav-pip"></div>
+                </a>
+                <a class="nav-item" href="#">
+                    <span class="icon">📊</span> Analytics & Reports
+                </a>
+                <a class="nav-item" href="#">
+                    <span class="icon">📈</span> Attendance Monitor
+                </a>
+            </nav>
+
+            <nav class="nav-section" style="margin-top:14px;">
+                <div class="nav-label">Institutional</div>
+                <a class="nav-item" href="#">
+                    <span class="icon">🏛️</span> Departments
+                </a>
+                <a class="nav-item" href="#">
+                    <span class="icon">👥</span> Staff Directory
+                </a>
+                <a class="nav-item" href="#">
+                    <span class="icon">🎓</span> Student Registry
+                </a>
+                <a class="nav-item" href="#">
+                    <span class="icon">🗳️</span> Voting Control
+                </a>
+            </nav>
+
+            <nav class="nav-section" style="margin-top:14px;">
+                <div class="nav-label">Operations</div>
+                <a class="nav-item" href="announcements_management.html">
+                    <span class="icon">📢</span> Announcements
+                </a>
+                <a class="nav-item" href="#">
+                    <span class="icon">🔧</span> Resource Allocation
+                </a>
+                <a class="nav-item" href="#">
+                    <span class="icon">📋</span> Audit Logs
+                </a>
+                <a class="nav-item" href="management_login.html" onclick="sessionStorage.clear()">
+                    <span class="icon">🚪</span> Sign Out
+                </a>
+            </nav>
+
+            <div class="sb-profile">
+                <div class="profile-row">
+                    <div class="mgmt-avatar">P</div>
+                    <div class="pr-info">
+                        <div class="pr-name">Principal</div>
+                        <div class="pr-role">Management</div>
+                    </div>
+                    <div class="pr-dot"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ── MAIN ── -->
+        <div class="main">
+
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="tb-left">
+                    <div class="tb-title">Management Command Centre</div>
+                    <div class="tb-sub" id="dateDisplay">Loading...</div>
+                </div>
+                <div class="tb-right">
+                    <div class="tb-tag">◆ Management Access</div>
+                    <div class="tb-icon">📋</div>
+                    <div class="tb-icon">🔔<div class="pip"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content">
+
+                <!-- Command Banner -->
+                <div class="cmd-banner">
+                    <div>
+                        <h1>Institutional <em>Command Overview</em></h1>
+                        <p id="bannerSub">Real-time intelligence across all departments, staff, and students — <span
+                                id="todayFull"></span></p>
+                    </div>
+                    <div class="kpi-strip">
+                        <div class="kpi">
+                            <div class="kv" style="color:var(--gold)">4</div>
+                            <div class="kl">Departments</div>
+                        </div>
+                        <div class="kpi">
+                            <div class="kv" style="color:var(--emerald)">248</div>
+                            <div class="kl">Students</div>
+                        </div>
+                        <div class="kpi">
+                            <div class="kv" style="color:var(--sapphire)">18</div>
+                            <div class="kl">Staff</div>
+                        </div>
+                        <div class="kpi">
+                            <div class="kv" style="color:var(--violet)">86%</div>
+                            <div class="kl">Overall Att.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metrics grid -->
+                <div class="metrics-grid">
+                    <div class="mcard" style="animation-delay:0.05s">
+                        <div class="mc-icon" style="background:var(--gold-dim)">🎓</div>
+                        <div class="mc-val" style="color:var(--gold)">248</div>
+                        <div class="mc-label">Total Students</div>
+                        <div class="mc-delta" style="background:var(--emerald-dim);color:var(--emerald)">↑ +12 this
+                            month</div>
+                        <div class="mc-bar">
+                            <div class="mc-fill" style="width:78%;background:var(--gold)"></div>
+                        </div>
+                    </div>
+                    <div class="mcard" style="animation-delay:0.08s">
+                        <div class="mc-icon" style="background:var(--sapphire-dim)">👨‍🏫</div>
+                        <div class="mc-val" style="color:var(--sapphire)">18</div>
+                        <div class="mc-label">Active Staff</div>
+                        <div class="mc-delta" style="background:var(--sapphire-dim);color:var(--sapphire)">● Full
+                            strength</div>
+                        <div class="mc-bar">
+                            <div class="mc-fill" style="width:100%;background:var(--sapphire)"></div>
+                        </div>
+                    </div>
+                    <div class="mcard" style="animation-delay:0.11s">
+                        <div class="mc-icon" style="background:var(--emerald-dim)">✅</div>
+                        <div class="mc-val" style="color:var(--emerald)">86%</div>
+                        <div class="mc-label">Overall Attendance</div>
+                        <div class="mc-delta" style="background:var(--emerald-dim);color:var(--emerald)">↑ +3% from last
+                            month</div>
+                        <div class="mc-bar">
+                            <div class="mc-fill" style="width:86%;background:var(--emerald)"></div>
+                        </div>
+                    </div>
+                    <div class="mcard" style="animation-delay:0.14s">
+                        <div class="mc-icon" style="background:var(--violet-dim)">📝</div>
+                        <div class="mc-val" style="color:var(--violet)">34</div>
+                        <div class="mc-label">Quizzes This Month</div>
+                        <div class="mc-delta" style="background:var(--violet-dim);color:var(--violet)">↑ 8 this week
+                        </div>
+                        <div class="mc-bar">
+                            <div class="mc-fill" style="width:68%;background:var(--violet)"></div>
+                        </div>
+                    </div>
+                    <div class="mcard" style="animation-delay:0.17s">
+                        <div class="mc-icon" style="background:var(--rose-dim)">⚠️</div>
+                        <div class="mc-val" style="color:var(--rose)">23</div>
+                        <div class="mc-label">Below 75% Alert</div>
+                        <div class="mc-delta" style="background:var(--rose-dim);color:var(--rose)">↓ -5 from last week
+                        </div>
+                        <div class="mc-bar">
+                            <div class="mc-fill" style="width:23%;background:var(--rose)"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 1: Dept Attendance + Attendance Chart -->
+                <div class="sh">Departmental Overview</div>
+                <div class="g13">
+
+                    <!-- Department table -->
+                    <div class="card" style="animation-delay:0.2s">
+                        <div class="card-h">
+                            <div class="ch-title">Department Attendance</div>
+                            <div class="ch-tag">This Semester</div>
+                        </div>
+                        <div id="deptRows"></div>
+
+                        <!-- Semester progress -->
+                        <div
+                            style="margin-top:20px;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;">
+                            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+                                <span
+                                    style="color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;font-size:10px;">Semester
+                                    Progress</span>
+                                <span style="font-family:'JetBrains Mono',monospace;color:var(--gold)">68 / 100
+                                    Days</span>
+                            </div>
+                            <div style="height:8px;background:var(--border);border-radius:8px;overflow:hidden;">
+                                <div
+                                    style="width:68%;height:100%;background:linear-gradient(90deg,var(--gold),var(--amber));border-radius:8px;">
+                                </div>
+                            </div>
+                            <div
+                                style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--muted);">
+                                <span>Aug 2024</span><span>Dec 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Donut analytics -->
+                    <div class="card" style="animation-delay:0.25s">
+                        <div class="card-h">
+                            <div class="ch-title">Student Distribution</div>
+                            <div class="ch-tag">All Depts</div>
+                        </div>
+                        <div class="donut-section">
+                            <svg width="130" height="130" viewBox="0 0 130 130">
+                                <circle cx="65" cy="65" r="50" fill="none" stroke="rgba(255,255,255,0.05)"
+                                    stroke-width="16" />
+                                <!-- CSE 40% -->
+                                <circle cx="65" cy="65" r="50" fill="none" stroke="var(--gold)" stroke-width="16"
+                                    stroke-dasharray="314" stroke-dashoffset="188" stroke-linecap="butt"
+                                    transform="rotate(-90 65 65)" />
+                                <!-- ECE 28% -->
+                                <circle cx="65" cy="65" r="50" fill="none" stroke="var(--sapphire)" stroke-width="16"
+                                    stroke-dasharray="314" stroke-dashoffset="226" stroke-linecap="butt"
+                                    transform="rotate(36 65 65)" />
+                                <!-- MECH 20% -->
+                                <circle cx="65" cy="65" r="50" fill="none" stroke="var(--emerald)" stroke-width="16"
+                                    stroke-dasharray="314" stroke-dashoffset="251" stroke-linecap="butt"
+                                    transform="rotate(123 65 65)" />
+                                <!-- CIVIL 12% -->
+                                <circle cx="65" cy="65" r="50" fill="none" stroke="var(--violet)" stroke-width="16"
+                                    stroke-dasharray="314" stroke-dashoffset="276" stroke-linecap="butt"
+                                    transform="rotate(186 65 65)" />
+                                <text x="65" y="60" text-anchor="middle" fill="white"
+                                    font-family="Playfair Display,serif" font-size="20" font-weight="700">248</text>
+                                <text x="65" y="75" text-anchor="middle" fill="#6b6878" font-family="Figtree,sans-serif"
+                                    font-size="9">Students</text>
+                            </svg>
+                            <div class="donut-leg">
+                                <div class="leg-row">
+                                    <div class="leg-dot" style="background:var(--gold)"></div>CSE — 40% (99)
+                                </div>
+                                <div class="leg-row">
+                                    <div class="leg-dot" style="background:var(--sapphire)"></div>ECE — 28% (69)
+                                </div>
+                                <div class="leg-row">
+                                    <div class="leg-dot" style="background:var(--emerald)"></div>Mech — 20% (50)
+                                </div>
+                                <div class="leg-row">
+                                    <div class="leg-dot" style="background:var(--violet)"></div>Civil — 12% (30)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gender split -->
+                        <div style="margin-top:18px;border-top:1px solid var(--border);padding-top:16px;">
+                            <div
+                                style="font-size:11px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">
+                                Gender Split</div>
+                            <div style="display:flex;gap:8px;height:10px;border-radius:8px;overflow:hidden;">
+                                <div style="flex:62;background:var(--sapphire)"></div>
+                                <div style="flex:38;background:var(--rose)"></div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;">
+                                <span style="color:var(--sapphire)">Male 62% (154)</span>
+                                <span style="color:var(--rose)">Female 38% (94)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Staff + Votes -->
+                <div class="sh">Staff & Governance</div>
+                <div class="g13">
+
+                    <!-- Staff table -->
+                    <div class="card" style="animation-delay:0.3s">
+                        <div class="card-h">
+                            <div class="ch-title">Staff Performance Overview</div>
+                            <div class="ch-tag">Current Semester</div>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Staff</th>
+                                    <th>Dept</th>
+                                    <th>Classes</th>
+                                    <th>Att. Marked</th>
+                                    <th>Quizzes</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staffTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Votes -->
+                    <div class="card" style="animation-delay:0.35s">
+                        <div class="card-h">
+                            <div class="ch-title">Active Polls & Voting</div>
+                            <div class="ch-tag">2 Live</div>
+                        </div>
+                        <div id="votingPanel"></div>
+
+                        <!-- Create vote -->
+                        <div
+                            style="margin-top:16px;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;">
+                            <div style="font-size:12px;font-weight:600;margin-bottom:10px;color:var(--gold)">◆ Create
+                                New Poll</div>
+                            <input id="pollQ" type="text" placeholder="Poll question..."
+                                style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:12px;font-family:'Figtree',sans-serif;outline:none;margin-bottom:8px;">
+                            <select id="pollTarget"
+                                style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:12px;font-family:'Figtree',sans-serif;outline:none;margin-bottom:8px;">
+                                <option>All Students</option>
+                                <option>All Staff</option>
+                                <option>CSE Department</option>
+                                <option>Management Only</option>
+                            </select>
+                            <button class="gold-btn" onclick="createPoll()" style="font-size:13px;padding:9px;">◆ Launch
+                                Poll</button>
+                            <div id="pollMsg"
+                                style="font-size:11px;color:var(--emerald);margin-top:6px;text-align:center;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Resources + Announcements + Alerts -->
+                <div class="sh">Operations & Communication</div>
+                <div class="g3">
+
+                    <!-- Resource utilization -->
+                    <div class="card" style="animation-delay:0.4s">
+                        <div class="card-h">
+                            <div class="ch-title">Resource Utilization</div>
+                            <div class="ch-tag">Today</div>
+                        </div>
+                        <div id="resourceBars"></div>
+
+                        <!-- Quick stats row -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;">
+                            <div
+                                style="padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;text-align:center;">
+                                <div
+                                    style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--emerald)">
+                                    12</div>
+                                <div
+                                    style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.8px">
+                                    Labs Active</div>
+                            </div>
+                            <div
+                                style="padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;text-align:center;">
+                                <div
+                                    style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--amber)">
+                                    3</div>
+                                <div
+                                    style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.8px">
+                                    Under Maint.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Announcement composer -->
+                    <div class="card" style="animation-delay:0.45s">
+                        <div class="card-h">
+                            <div class="ch-title">Broadcast Announcement</div>
+                        </div>
+                        <div class="ann-form">
+                            <label>Announcement Title</label>
+                            <input type="text" id="annTitle" placeholder="e.g., Internal Exam Schedule">
+                            <label>Target Audience</label>
+                            <select id="annTarget">
+                                <option>All (Students + Staff)</option>
+                                <option>Students Only</option>
+                                <option>Staff Only</option>
+                                <option>CSE Department</option>
+                            </select>
+                            <label>Priority</label>
+                            <select id="annPriority">
+                                <option>Normal</option>
+                                <option>Important</option>
+                                <option>Urgent</option>
+                            </select>
+                            <label>Message</label>
+                            <textarea id="annMsg" rows="3" placeholder="Enter announcement message..."></textarea>
+                            <button class="gold-btn" onclick="sendAnnouncement()">📢 Broadcast Now</button>
+                            <div id="annResult"
+                                style="font-size:12px;color:var(--emerald);margin-top:8px;text-align:center;"></div>
+                        </div>
+                    </div>
+
+                    <!-- System alerts -->
+                    <div class="card" style="animation-delay:0.5s">
+                        <div class="card-h">
+                            <div class="ch-title">System Alerts</div>
+                            <div class="ch-tag">5 new</div>
+                        </div>
+                        <div id="alertList"></div>
+                    </div>
+                </div>
+
+            </div><!-- /content -->
+        </div><!-- /main -->
+    </div><!-- /layout -->
+
+    <script>
+        // ── Date & Time ──
+        const now = new Date();
+        const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const dateStr = dayNames[now.getDay()] + ", " + now.getDate() + " " + monthNames[now.getMonth()] + " " + now.getFullYear();
+        document.getElementById("dateDisplay").textContent = dateStr + " · Management Portal";
+        document.getElementById("todayFull").textContent = dateStr;
+
+        // ── Department rows ──
+        const depts = [
+            { icon: "💻", name: "Computer Science", code: "CSE", students: 99, staff: 6, att: 87, color: "var(--gold)" },
+            { icon: "⚡", name: "Electronics & Comm", code: "ECE", students: 69, staff: 5, att: 84, color: "var(--sapphire)" },
+            { icon: "⚙️", name: "Mechanical Engg", code: "MECH", students: 50, staff: 4, att: 82, color: "var(--emerald)" },
+            { icon: "🏗️", name: "Civil Engineering", code: "CIVIL", students: 30, staff: 3, att: 91, color: "var(--violet)" },
+        ];
+        const deptEl = document.getElementById("deptRows");
+        depts.forEach(d => {
+            const attColor = d.att >= 85 ? "var(--emerald)" : d.att >= 75 ? "var(--amber)" : "var(--rose)";
+            deptEl.innerHTML += `
+    <div class="dept-row">
+        <div class="dept-badge" style="background:rgba(255,255,255,0.05)">${d.icon}</div>
+        <div class="dept-name">
+            <div class="dn">${d.name}</div>
+            <div class="ds">${d.code} · ${d.students} students · ${d.staff} staff</div>
+        </div>
+        <div class="dept-bar-wrap">
+            <div class="dept-mini-bar">
+                <div class="dept-mini-fill" style="width:${d.att}%;background:${attColor}"></div>
+            </div>
+        </div>
+        <div class="dept-att" style="color:${attColor}">${d.att}%</div>
+    </div>`;
+        });
+
+        // ── Staff table ──
+        const staffData = [
+            { name: "Guruprasath D", dept: "CSE", classes: 3, att: 98, quizzes: 5, status: "Active" },
+            { name: "Abishek R", dept: "CSE", classes: 2, att: 95, quizzes: 3, status: "Active" },
+            { name: "Dharanishwar S", dept: "ECE", classes: 3, att: 100, quizzes: 4, status: "Active" },
+            { name: "Aadhi Raj J", dept: "MECH", classes: 2, att: 90, quizzes: 2, status: "Active" },
+            { name: "Kavya M", dept: "CIVIL", classes: 3, att: 85, quizzes: 3, status: "Active" },
+            { name: "Lokesh P", dept: "CSE", classes: 2, att: 78, quizzes: 1, status: "On Leave" },
+        ];
+        const staffBody = document.getElementById("staffTableBody");
+        staffData.forEach(s => {
+            const sc = s.status === "Active" ? "var(--emerald)" : "var(--amber)";
+            const sbg = s.status === "Active" ? "var(--emerald-dim)" : "rgba(245,166,35,0.1)";
+            const initials = s.name.split(" ").map(x => x[0]).join("").slice(0, 2);
+            staffBody.innerHTML += `
+    <tr>
+        <td><div class="tbl-name"><div class="tbl-avatar">${initials}</div><span>${s.name}</span></div></td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold)">${s.dept}</td>
+        <td style="font-family:'JetBrains Mono',monospace">${s.classes}</td>
+        <td style="font-family:'JetBrains Mono',monospace;color:${s.att >= 90 ? 'var(--emerald)' : s.att >= 80 ? 'var(--amber)' : 'var(--rose)'}">${s.att}%</td>
+        <td style="font-family:'JetBrains Mono',monospace">${s.quizzes}</td>
+        <td><span class="status-pill" style="background:${sbg};color:${sc}">${s.status}</span></td>
+    </tr>`;
+        });
+
+        // ── Voting panel ──
+        const votes = [
+            {
+                q: "Best Department for Annual Day Hosting",
+                opts: [
+                    { label: "CSE Department", pct: 42, color: "var(--gold)" },
+                    { label: "ECE Department", pct: 31, color: "var(--sapphire)" },
+                    { label: "Mechanical", pct: 27, color: "var(--emerald)" },
+                ],
+                total: 243, ends: "Mar 26", live: true
+            },
+            {
+                q: "New Campus Canteen Operating Hours",
+                opts: [
+                    { label: "7 AM – 7 PM", pct: 55, color: "var(--emerald)" },
+                    { label: "8 AM – 8 PM", pct: 30, color: "var(--sapphire)" },
+                    { label: "6 AM – 6 PM", pct: 15, color: "var(--violet)" },
+                ],
+                total: 189, ends: "Mar 28", live: true
+            }
+        ];
+        const vpEl = document.getElementById("votingPanel");
+        votes.forEach(v => {
+            let optsHtml = v.opts.map(o => `
+        <div class="vote-opt">
+            <div class="vo-label"><span>${o.label}</span><span style="font-family:'JetBrains Mono',monospace;font-weight:600;color:${o.color}">${o.pct}%</span></div>
+            <div class="vo-bar"><div class="vo-fill" style="width:${o.pct}%;background:${o.color}"></div></div>
+        </div>`).join("");
+            vpEl.innerHTML += `
+    <div class="vote-item">
+        <div class="vote-q">${v.q}</div>
+        ${optsHtml}
+        <div class="vote-meta">
+            ${v.total} votes · Ends ${v.ends}
+            <span class="status-pill" style="background:var(--emerald-dim);color:var(--emerald);margin-left:8px">● Live</span>
+            <button onclick="closeVote(this)" style="margin-left:8px;font-size:10px;background:var(--rose-dim);color:var(--rose);border:1px solid rgba(232,125,125,0.2);padding:3px 8px;border-radius:6px;cursor:pointer;font-family:'JetBrains Mono',monospace;">Close Poll</button>
+        </div>
+    </div>`;
+        });
+
+        function closeVote(btn) {
+            const item = btn.closest(".vote-item");
+            item.style.opacity = "0.5";
+            btn.textContent = "Closed";
+            btn.disabled = true;
+            item.querySelector(".status-pill").textContent = "● Closed";
+            item.querySelector(".status-pill").style.background = "var(--rose-dim)";
+            item.querySelector(".status-pill").style.color = "var(--rose)";
+        }
+
+        function createPoll() {
+            const q = document.getElementById("pollQ").value.trim();
+            const msg = document.getElementById("pollMsg");
+            if (!q) { msg.style.color = "var(--rose)"; msg.textContent = "⚠ Please enter a poll question."; return; }
+            msg.style.color = "var(--emerald)";
+            msg.textContent = "✔ Poll launched: \"" + q + "\"";
+            document.getElementById("pollQ").value = "";
+            setTimeout(() => msg.textContent = "", 4000);
+        }
+
+        // ── Resources ──
+        const resources = [
+            { label: "Classrooms", pct: 82, color: "var(--gold)" },
+            { label: "CS Labs", pct: 91, color: "var(--sapphire)" },
+            { label: "Library", pct: 67, color: "var(--emerald)" },
+            { label: "Seminar Hall", pct: 40, color: "var(--violet)" },
+            { label: "Sports Ground", pct: 55, color: "var(--amber)" },
+            { label: "Hostel", pct: 88, color: "var(--rose)" },
+        ];
+        const resEl = document.getElementById("resourceBars");
+        resources.forEach(r => {
+            resEl.innerHTML += `
+    <div class="res-row">
+        <div class="res-label">${r.label}</div>
+        <div class="res-bar"><div class="res-fill" style="width:${r.pct}%;background:${r.color}"></div></div>
+        <div class="res-pct" style="color:${r.color}">${r.pct}%</div>
+    </div>`;
+        });
+
+        // ── Alerts ──
+        const alerts = [
+            { icon: "⚠️", bg: "var(--rose-dim)", title: "23 students below 75% attendance", desc: "Across all departments. Automated notices sent.", time: "Today, 8:00 AM" },
+            { icon: "🔒", bg: "var(--gold-dim)", title: "Exam portal goes live in 5 days", desc: "Internal exam for Semester 4 begins March 29.", time: "Today, 7:45 AM" },
+            { icon: "📊", bg: "var(--sapphire-dim)", title: "Monthly report auto-generated", desc: "March 2025 attendance report is ready for download.", time: "Mar 24, 12:00 AM" },
+            { icon: "✅", bg: "var(--emerald-dim)", title: "Voting results finalised", desc: "Annual day dept poll winner: CSE (42%)", time: "Yesterday" },
+            { icon: "🔧", bg: "var(--violet-dim)", title: "Lab 3 under maintenance", desc: "CS Lab 3 unavailable till March 26. Reschedule notified.", time: "Mar 22" },
+        ];
+        const alertEl = document.getElementById("alertList");
+        alerts.forEach(a => {
+            alertEl.innerHTML += `
+    <div class="alert-item">
+        <div class="alert-icon" style="background:${a.bg}">${a.icon}</div>
+        <div class="alert-body">
+            <div class="ab-title">${a.title}</div>
+            <div class="ab-desc">${a.desc}</div>
+            <div class="ab-time">${a.time}</div>
+        </div>
+    </div>`;
+        });
+
+        // ── Announcement ──
+        function sendAnnouncement() {
+            const title = document.getElementById("annTitle").value.trim();
+            const res = document.getElementById("annResult");
+            if (!title) { res.style.color = "var(--rose)"; res.textContent = "⚠ Please enter a title."; return; }
+            const target = document.getElementById("annTarget").value;
+            const priority = document.getElementById("annPriority").value;
+            res.style.color = "var(--emerald)";
+            res.textContent = `✔ Broadcast sent to "${target}" — [${priority}]`;
+            document.getElementById("annTitle").value = "";
+            document.getElementById("annMsg").value = "";
+            setTimeout(() => res.textContent = "", 5000);
+        }
+    </script>
+
+</body>
+
+</html>

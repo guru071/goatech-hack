@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 400px;
+            height: 250px;
+            background-color: aquamarine;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+    
+</head>
+<body>
+<div>
+    <button id="student">I am Student</button><br>
+    <button id="teacher">I am Teacher</button>
+</div>
+<script>
+    document.getElementById('student').addEventListener('click', function() {
+        window.location.href = 'student_login.html';
+    });
+
+    document.getElementById('teacher').addEventListener('click', function() {
+        window.location.href = 'staff_login.html';
+    });
+</script>
+</body>
+</html>

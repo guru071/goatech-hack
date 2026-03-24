@@ -1,0 +1,34 @@
+{
+    "science": {
+        "easy": [
+            {
+                "question": "jgcjevb",
+                "a": "wljfhjroug",
+                "b": "hwdhhb",
+                "c": "cmmbvj",
+                "d": "vifjvbfnb"
+            },
+            {}
+        ],
+        "modarate": [
+            {},
+            {}
+        ]
+    },
+    "maths": {
+        "easy": [
+            {
+                "question": "jgcjevb",
+                "a": "wljfhjroug",
+                "b": "hwdhhb",
+                "c": "cmmbvj",
+                "d": "vifjvbfnb"
+            },
+            {}
+        ],
+        "modarate": [
+            {},
+            {}
+        ]
+    }
+}

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOATECH – Staff Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/staffdashboard.css">
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+    <div class="sidebar-head">
+        <div class="logo-row">
+            <div class="logo-icon">🎓</div>
+            <div class="logo-text">GOATECH</div>
+        </div>
+        <div class="staff-chip">
+            <span>●</span> Staff Portal
+        </div>
+    </div>
+
+    <nav class="nav-group">
+        <div class="nav-grp-label">Overview</div>
+        <a class="nav-item active" href="#">
+            <span class="icon">⊞</span> Dashboard
+        </a>
+        <a class="nav-item" href="#">
+            <span class="icon">📅</span> Mark Attendance
+            <span class="nav-badge">Today</span>
+        </a>
+        <a class="nav-item" href="#">
+            <span class="icon">👥</span> My Classes
+        </a>
+    </nav>
+
+    <nav class="nav-group" style="margin-top:14px;">
+        <div class="nav-grp-label">Assessments</div>
+        <a class="nav-item" href="#">
+            <span class="icon">📝</span> Create Quiz
+        </a>
+        <a class="nav-item" href="#">
+            <span class="icon">📊</span> Quiz Results
+        </a>
+        <a class="nav-item" href="#">
+            <span class="icon">📈</span> Student Reports
+        </a>
+    </nav>
+
+    <nav class="nav-group" style="margin-top:14px;">
+        <div class="nav-grp-label">Communication</div>
+        <a class="nav-item" href="#">
+            <span class="icon">📢</span> Announcements
+        </a>
+        <a class="nav-item" href="#">
+            <span class="icon">💬</span> Messages
+            <span class="nav-badge">3</span>
+        </a>
+        <a class="nav-item" href="#">
+            <span class="icon">🗳️</span> Conduct Vote
+        </a>
+    </nav>
+
+    <nav class="nav-group" style="margin-top:14px;">
+        <div class="nav-grp-label">Account</div>
+        <a class="nav-item" href="#">
+            <span class="icon">👤</span> My Profile
+        </a>
+        <a class="nav-item" href="staff_login.html" onclick="sessionStorage.clear()">
+            <span class="icon">🚪</span> Log Out
+        </a>
+    </nav>
+
+    <div class="sidebar-profile">
+        <div class="profile-card">
+            <div class="p-avatar" id="sidebarAvatar">SF</div>
+            <div class="p-info">
+                <div class="p-name" id="sidebarName">Staff Member</div>
+                <div class="p-dept">CS Department</div>
+            </div>
+            <div class="p-status"></div>
+        </div>
+    </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <div class="page-title">Staff Dashboard</div>
+            <div class="page-sub" id="todaySub">Monday · Loading...</div>
+        </div>
+        <div class="topbar-right">
+            <div class="tb-chip" id="staffIdChip">ID: —</div>
+            <div class="tb-btn">💬<div class="tb-dot"></div></div>
+            <div class="tb-btn">🔔</div>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+
+        <!-- Banner -->
+        <div class="banner">
+            <div>
+                <h1>Good <span id="greeting">Morning</span>, <span id="staffGreet">Professor</span> 👋</h1>
+                <p>You have <strong style="color:var(--blue)">3 classes</strong> today and <strong style="color:var(--amber)">2 quizzes</strong> pending evaluation.</p>
+            </div>
+            <div class="banner-stats">
+                <div class="bstat">
+                    <div class="bval" style="color:var(--blue)">48</div>
+                    <div class="blabel">Students</div>
+                </div>
+                <div class="bstat">
+                    <div class="bval" style="color:var(--green)">3</div>
+                    <div class="blabel">Subjects</div>
+                </div>
+                <div class="bstat">
+                    <div class="bval" style="color:var(--amber)">87%</div>
+                    <div class="blabel">Avg Attendance</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-row">
+            <div class="scard" style="animation-delay:0.05s">
+                <div class="sc-top">
+                    <div class="sc-icon" style="background:rgba(99,179,237,0.12)">📚</div>
+                    <div class="sc-trend" style="background:rgba(104,211,145,0.12);color:var(--green)">+2 this week</div>
+                </div>
+                <div class="sc-val" style="color:var(--blue)">3</div>
+                <div class="sc-label">Subjects Assigned</div>
+                <div class="sc-bar"><div class="sc-fill" style="width:60%;background:var(--blue)"></div></div>
+            </div>
+            <div class="scard" style="animation-delay:0.1s">
+                <div class="sc-top">
+                    <div class="sc-icon" style="background:rgba(104,211,145,0.12)">✅</div>
+                    <div class="sc-trend" style="background:rgba(99,179,237,0.12);color:var(--blue)">87% avg</div>
+                </div>
+                <div class="sc-val" style="color:var(--green)">87%</div>
+                <div class="sc-label">Class Attendance</div>
+                <div class="sc-bar"><div class="sc-fill" style="width:87%;background:var(--green)"></div></div>
+            </div>
+            <div class="scard" style="animation-delay:0.15s">
+                <div class="sc-top">
+                    <div class="sc-icon" style="background:rgba(246,173,85,0.12)">📝</div>
+                    <div class="sc-trend" style="background:rgba(252,129,129,0.12);color:var(--red)">2 pending</div>
+                </div>
+                <div class="sc-val" style="color:var(--amber)">5</div>
+                <div class="sc-label">Quizzes Created</div>
+                <div class="sc-bar"><div class="sc-fill" style="width:50%;background:var(--amber)"></div></div>
+            </div>
+            <div class="scard" style="animation-delay:0.2s">
+                <div class="sc-top">
+                    <div class="sc-icon" style="background:rgba(183,148,244,0.12)">🏆</div>
+                    <div class="sc-trend" style="background:rgba(79,209,197,0.12);color:var(--teal)">↑ 4pts</div>
+                </div>
+                <div class="sc-val" style="color:var(--purple)">74%</div>
+                <div class="sc-label">Avg Quiz Score</div>
+                <div class="sc-bar"><div class="sc-fill" style="width:74%;background:var(--purple)"></div></div>
+            </div>
+        </div>
+
+        <!-- Row 1: Attendance + Schedule -->
+        <div class="sec-head">📋 Today's Work</div>
+        <div class="two-col">
+
+            <!-- Mark Attendance -->
+            <div class="card" style="animation-delay:0.22s">
+                <div class="card-title">
+                    Mark Attendance
+                    <div class="ct-badge" id="attDate">—</div>
+                </div>
+                <div class="tabs" id="classTabs"></div>
+                <div class="class-header">
+                    <div>
+                        <div class="cls-name" id="activeClassName">CS301 – Data Structures</div>
+                        <div class="cls-info" id="activeClassInfo">Section A · 48 Students · 9:20 AM</div>
+                    </div>
+                </div>
+                <div id="studentList"></div>
+                <div style="display:flex;gap:10px;margin-top:6px;">
+                    <button class="submit-btn" style="background:linear-gradient(135deg,var(--green),var(--teal));flex:1" onclick="markAll('present')">✔ All Present</button>
+                    <button class="submit-btn" style="background:var(--surface);border:1px solid var(--border);color:var(--text);flex:0.5" onclick="submitAttendance()">Submit</button>
+                </div>
+            </div>
+
+            <!-- Today's Schedule -->
+            <div class="card" style="animation-delay:0.27s">
+                <div class="card-title">Today's Schedule <div class="ct-badge">5 Periods</div></div>
+                <div id="scheduleList"></div>
+
+                <!-- Quick stats -->
+                <div style="margin-top:18px;padding:14px;background:var(--bg2);border-radius:10px;border:1px solid var(--border);">
+                    <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Period Completion</div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div style="flex:1;height:8px;background:var(--border);border-radius:8px;overflow:hidden;">
+                            <div style="width:40%;height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:8px;"></div>
+                        </div>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--blue)">2 / 5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Student Performance + Quiz Create -->
+        <div class="sec-head">📊 Assessment & Analytics</div>
+        <div class="two-col">
+
+            <!-- Student Performance -->
+            <div class="card" style="animation-delay:0.3s">
+                <div class="card-title">
+                    Student Performance – CS301
+                    <div class="ct-badge">Top 8</div>
+                </div>
+                <table class="perf-table" id="perfTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Attendance</th>
+                            <th>Quiz Avg</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="perfBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Create Quiz -->
+            <div class="card" style="animation-delay:0.35s">
+                <div class="card-title">Create Quiz <div class="ct-badge">Quick</div></div>
+                <div class="quiz-form" id="quizForm">
+                    <label>Quiz Title</label>
+                    <input type="text" id="qTitle" placeholder="e.g., Unit 3 – Sorting Algorithms">
+                    <label>Subject</label>
+                    <select id="qSubject">
+                        <option>CS301 – Data Structures</option>
+                        <option>CS302 – Computer Networks</option>
+                        <option>MA401 – Mathematics IV</option>
+                    </select>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <div>
+                            <label>No. of Questions</label>
+                            <input type="number" id="qCount" placeholder="20" min="1" max="100">
+                        </div>
+                        <div>
+                            <label>Duration (mins)</label>
+                            <input type="number" id="qDuration" placeholder="30" min="5">
+                        </div>
+                    </div>
+                    <label>Deadline</label>
+                    <input type="datetime-local" id="qDeadline">
+                    <label>Instructions (optional)</label>
+                    <textarea id="qInstructions" rows="2" placeholder="Open book. No calculators."></textarea>
+                    <button class="submit-btn" onclick="createQuiz()">🚀 Publish Quiz</button>
+                    <div id="quizMsg" style="font-size:12px;color:var(--green);margin-top:8px;text-align:center;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Attendance chart + Notifications -->
+        <div class="sec-head">📣 Reports & Updates</div>
+        <div class="three-col">
+
+            <!-- Subject attendance summary -->
+            <div class="card" style="animation-delay:0.4s">
+                <div class="card-title">Attendance by Subject</div>
+                <div id="subjectBars"></div>
+            </div>
+
+            <!-- Recent quiz results -->
+            <div class="card" style="animation-delay:0.45s">
+                <div class="card-title">Recent Quiz Results <div class="ct-badge">Last 3</div></div>
+                <div id="quizResults"></div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="card" style="animation-delay:0.5s">
+                <div class="card-title">Notifications <div class="ct-badge">4 new</div></div>
+                <div id="notifList"></div>
+            </div>
+
+        </div>
+
+    </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script src="../js/staff.js">
+</script>
+</body>
+</html>

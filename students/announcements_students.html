@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GOATECH – Announcements</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg:#020617;
+    --surface:rgba(255,255,255,0.04);
+    --border:rgba(255,255,255,0.08);
+    --cyan:#13bece;
+    --cyan-dim:rgba(19,190,206,0.15);
+    --text:#e2e8f0;
+    --muted:#64748b;
+}
+
+body {
+    margin:0;
+    font-family:'DM Sans',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* Layout */
+.layout { display:flex; }
+
+/* Sidebar (same style simplified) */
+.sidebar {
+    width:240px;
+    height:100vh;
+    background:rgba(2,6,23,0.9);
+    border-right:1px solid var(--border);
+    padding:20px;
+}
+
+.brand {
+    font-family:'Syne';
+    font-weight:800;
+    color:var(--cyan);
+    font-size:22px;
+}
+
+/* Main */
+.main {
+    flex:1;
+}
+
+/* Topbar */
+.topbar {
+    padding:20px 30px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.page-title {
+    font-family:'Syne';
+    font-size:20px;
+    font-weight:700;
+}
+
+/* Content */
+.content {
+    padding:30px;
+}
+
+/* Announcement Card */
+.announcement {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    margin-bottom:16px;
+    transition:0.2s;
+}
+
+.announcement:hover {
+    border-color:var(--cyan);
+    transform:translateY(-2px);
+}
+
+.ann-header {
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+}
+
+.ann-title {
+    font-weight:600;
+    font-size:15px;
+}
+
+.ann-tag {
+    font-size:11px;
+    padding:4px 10px;
+    border-radius:20px;
+    background:var(--cyan-dim);
+    color:var(--cyan);
+}
+
+.ann-body {
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.6;
+}
+
+.ann-footer {
+    margin-top:10px;
+    font-size:11px;
+    color:var(--muted);
+}
+
+/* Back button */
+.back-btn {
+    padding:8px 16px;
+    border-radius:8px;
+    background:var(--cyan);
+    border:none;
+    color:#000;
+    font-weight:600;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="brand">GOATECH</div>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="page-title">📢 Announcements</div>
+            <button class="back-btn" onclick="goBack()">← Back</button>
+        </div>
+
+        <!-- Content -->
+        <div class="content" id="announcementList"></div>
+
+    </div>
+</div>
+
+<script>
+
+// Back to dashboard
+function goBack(){
+    window.location.href = "student_dashboard.html";
+}
+
+// Sample announcements (can later connect backend)
+const announcements = [
+{
+    title:"Attendance Portal Updated",
+    tag:"Important",
+    body:"Biometric attendance now syncs in real-time. Students must verify records within 48 hours.",
+    time:"Today · HOD Office"
+},
+{
+    title:"Internal Exams Schedule",
+    tag:"Exam",
+    body:"Unit-2 internal exams begin March 28. Check timetable section for detailed schedule.",
+    time:"Yesterday · Exam Cell"
+},
+{
+    title:"NEXATHON 2.0 Results",
+    tag:"Event",
+    body:"Results have been published. Congratulations to all participants.",
+    time:"Mar 20 · Events Dept"
+},
+{
+    title:"Library Renewal Reminder",
+    tag:"Notice",
+    body:"Renew your library card before March 31 to avoid suspension.",
+    time:"Mar 18 · Library"
+}
+];
+
+// Render
+const container = document.getElementById("announcementList");
+
+announcements.forEach(a=>{
+    container.innerHTML += `
+    <div class="announcement">
+        <div class="ann-header">
+            <div class="ann-title">${a.title}</div>
+            <div class="ann-tag">${a.tag}</div>
+        </div>
+        <div class="ann-body">${a.body}</div>
+        <div class="ann-footer">${a.time}</div>
+    </div>`;
+});
+
+</script>
+
+</body>
+</html>

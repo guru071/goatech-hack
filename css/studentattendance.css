@@ -1,0 +1,44 @@
+button{
+    font-size:18px;
+    border-radius: 10px;
+    border: none;
+    height :40px;
+    background-color: rgb(2, 2, 109);
+    color: white;
+}
+#btns{
+    display: flex;
+    height: 100px;
+    width: 250px;
+    align-items: center;
+    justify-content: space-between;
+}
+#options{
+    font-size: 18px;
+}
+#info{
+background-color: aqua;
+width: 800px;
+height: 580px;
+}
+#outer{
+    display: flex;
+    justify-content: space-between;
+}
+#info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+table{
+    
+    font-size: 30px;
+    font-weight: bold;
+    padding: 100px;
+}
+td{
+    padding: 10px;
+    border: none;
+    margin-right: 50px;
+}

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOATECH – Student Dashboard</title>
+    <link rel="stylesheet" href="../css/studentdashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+    </style>
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="brand">GOATECH</div>
+            <div class="tagline">Smart College Management</div>
+        </div>
+
+        <nav class="nav-section">
+            <div class="nav-label">Main</div>
+            <a class="nav-item active" href="#">
+                <span class="icon">🏠</span> Dashboard
+            </a>
+            <a class="nav-item" href="attendance.html">
+                <span class="icon">📅</span> Attendance
+            </a>
+            <a class="nav-item" href="quiz.html">
+                <span class="icon">📝</span> Quizzes
+            </a>
+            <a class="nav-item" href="voting/voting_login.html">
+                <span class="icon">🗳️</span> Voting
+            </a>
+        </nav>
+
+        <nav class="nav-section" style="margin-top:16px;">
+            <div class="nav-label">Academic</div>
+            <a class="nav-item" href="#">
+                <span class="icon">📚</span> Courses
+            </a>
+            <a class="nav-item" href="results.html">
+                <span class="icon">📊</span> Results
+            </a>
+            <a class="nav-item" href="exam_timetable.html">
+                <span class="icon">🗓️</span> Timetable
+            </a>
+        </nav>
+
+        <nav class="nav-section" style="margin-top:16px;">
+            <div class="nav-label">Account</div>
+            <a class="nav-item" href="profile.html">
+                <span class="icon">👤</span> My Profile
+            </a>
+            <a class="nav-item" href="https://google.com">
+                <span class="icon">🔔</span> Notifications
+            </a>
+            <a class="nav-item" href="student_login.html" onclick="sessionStorage.clear()">
+                <span class="icon">🚪</span> Log Out
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-pill">
+                <div class="avatar" id="avatarInitials">ST</div>
+                <div class="user-info">
+                    <div class="name" id="sidebarName">Student</div>
+                    <div class="role">CSE – Semester 4</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <div class="main">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="page-title">Student Dashboard</div>
+            <div class="topbar-right">
+                <div class="enroll-tag">ID: <span id="enrollDisplay">—</span></div>
+                <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="content">
+
+            <!-- Welcome -->
+            <div class="welcome-banner">
+                <div class="welcome-text">
+                    <h1>Welcome back, <span id="greetName">Student</span> 👋</h1>
+                    <p>Here's an overview of your academic progress today — <span id="todayDate"></span></p>
+                </div>
+                <div class="welcome-badge">
+                    <div class="sem">Semester</div>
+                    <div class="sem-val">04</div>
+                    <div class="sem" style="margin-top:4px;">2024–25</div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card" style="animation-delay:0.05s">
+                    <div class="label">Overall Attendance</div>
+                    <div class="value" style="color:var(--green)">82%</div>
+                    <div class="sub">↑ 3% from last month</div>
+                    <div class="bar-bg"><div class="bar-fill" style="width:82%;background:var(--green)"></div></div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.1s">
+                    <div class="label">Quizzes Completed</div>
+                    <div class="value" style="color:var(--cyan)">7 <span style="font-size:16px;color:var(--muted)">/10</span></div>
+                    <div class="sub">3 upcoming</div>
+                    <div class="bar-bg"><div class="bar-fill" style="width:70%;background:var(--cyan)"></div></div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.15s">
+                    <div class="label">Quiz Avg Score</div>
+                    <div class="value" style="color:var(--amber)">74%</div>
+                    <div class="sub">Above class average</div>
+                    <div class="bar-bg"><div class="bar-fill" style="width:74%;background:var(--amber)"></div></div>
+                </div>
+                <div class="stat-card" style="animation-delay:0.2s">
+                    <div class="label">Active Votes</div>
+                    <div class="value" style="color:var(--purple)">2</div>
+                    <div class="sub">Ends in 3 days</div>
+                    <div class="bar-bg"><div class="bar-fill" style="width:40%;background:var(--purple)"></div></div>
+                </div>
+            </div>
+
+            <!-- Two-col: Attendance + Quizzes -->
+            <div class="section-title">📋 Academics at a Glance</div>
+            <div class="two-col">
+
+                <!-- Subject Attendance -->
+                <div class="card" style="animation-delay:0.25s">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;">Subject-wise Attendance</div>
+                        <div style="font-size:12px;color:var(--muted);">This Semester</div>
+                    </div>
+                    <div id="subjects"></div>
+                </div>
+
+                <!-- Donut + Quiz -->
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                    <!-- Donut -->
+                    <div class="card" style="animation-delay:0.3s">
+                        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:16px;">Quiz Performance</div>
+                        <div class="donut-wrap">
+                            <svg width="110" height="110" viewBox="0 0 110 110">
+                                <circle cx="55" cy="55" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="14"/>
+                                <!-- Passed: 74% -->
+                                <circle cx="55" cy="55" r="42" fill="none" stroke="var(--cyan)" stroke-width="14"
+                                    stroke-dasharray="264" stroke-dashoffset="68"
+                                    stroke-linecap="round" transform="rotate(-90 55 55)"/>
+                                <!-- Average: 16% -->
+                                <circle cx="55" cy="55" r="42" fill="none" stroke="var(--amber)" stroke-width="14"
+                                    stroke-dasharray="264" stroke-dashoffset="221"
+                                    stroke-linecap="round" transform="rotate(177 55 55)"/>
+                                <text x="55" y="51" text-anchor="middle" fill="white" font-family="Syne,sans-serif" font-size="16" font-weight="800">74%</text>
+                                <text x="55" y="65" text-anchor="middle" fill="#64748b" font-family="DM Sans,sans-serif" font-size="9">Avg Score</text>
+                            </svg>
+                            <div class="donut-legend">
+                                <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>Scored 75+ (4 quizzes)</div>
+                                <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Scored 50–74 (3 quizzes)</div>
+                                <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.1)"></div>Not attempted (3)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Quizzes -->
+                    <div class="card" style="animation-delay:0.35s">
+                        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:14px;">Upcoming Quizzes</div>
+                        <div class="quiz-item">
+                            <div class="quiz-icon" style="background:rgba(19,190,206,0.15)">📐</div>
+                            <div class="quiz-info">
+                                <div class="quiz-name">Unit 3 – Data Structures</div>
+                                <div class="quiz-sub">CS301 · 20 Questions</div>
+                            </div>
+                            <div class="quiz-meta">
+                                <div class="quiz-date">Mar 26</div>
+                                <div class="quiz-badge" style="background:rgba(19,190,206,0.15);color:var(--cyan)">Tomorrow</div>
+                            </div>
+                        </div>
+                        <div class="quiz-item">
+                            <div class="quiz-icon" style="background:rgba(245,158,11,0.15)">⚡</div>
+                            <div class="quiz-info">
+                                <div class="quiz-name">Mid-sem – Networks</div>
+                                <div class="quiz-sub">CS302 · 30 Questions</div>
+                            </div>
+                            <div class="quiz-meta">
+                                <div class="quiz-date">Mar 29</div>
+                                <div class="quiz-badge" style="background:rgba(245,158,11,0.15);color:var(--amber)">In 3 Days</div>
+                            </div>
+                        </div>
+                        <div class="quiz-item">
+                            <div class="quiz-icon" style="background:rgba(167,139,250,0.15)">🧮</div>
+                            <div class="quiz-info">
+                                <div class="quiz-name">Unit 2 – DBMS</div>
+                                <div class="quiz-sub">CS303 · 25 Questions</div>
+                            </div>
+                            <div class="quiz-meta">
+                                <div class="quiz-date">Apr 02</div>
+                                <div class="quiz-badge" style="background:rgba(167,139,250,0.15);color:var(--purple)">Apr</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timetable -->
+            <div class="timetable-wrap">
+                <div class="section-title">🗓️ Today's Timetable</div>
+                <div class="day-tabs" id="dayTabs"></div>
+                <div class="timetable-grid" id="timetableGrid"></div>
+            </div>
+
+            <!-- Two-col: Votes + Announcements -->
+            <div class="section-title">📣 Notices & Voting</div>
+            <div class="two-col">
+
+                <!-- Active Votes -->
+                <div class="card" style="animation-delay:0.4s">
+                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:16px;">Active Polls</div>
+
+                    <div style="padding:16px;background:rgba(19,190,206,0.07);border:1px solid var(--cyan-glow);border-radius:12px;margin-bottom:12px;">
+                        <div style="font-size:14px;font-weight:600;margin-bottom:12px;">Best Department for Annual Day Hosting</div>
+                        <div id="voteOptions"></div>
+                        <button onclick="castVote(this)" style="margin-top:14px;padding:9px 20px;background:var(--cyan);color:#020617;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Syne',sans-serif;transition:opacity 0.2s;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">Cast Vote</button>
+                        <div style="font-size:11px;color:var(--muted);margin-top:8px;">Ends: March 26, 2025 · 243 votes cast</div>
+                    </div>
+
+                    <div style="padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;">
+                        <div style="font-size:14px;font-weight:600;margin-bottom:10px;">Student Council President – Election</div>
+                        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Voting opens April 1st</div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <span style="font-size:12px;background:rgba(245,158,11,0.12);color:var(--amber);padding:4px 10px;border-radius:20px;">⏳ Upcoming</span>
+                            <span style="font-size:12px;background:var(--surface);color:var(--muted);padding:4px 10px;border-radius:20px;">4 Candidates</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Announcements -->
+                <div class="card" style="animation-delay:0.45s">
+                    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:14px;">Announcements</div>
+                    <div class="announce-item">
+                        <div class="announce-icon" style="background:rgba(19,190,206,0.15)">📢</div>
+                        <div class="announce-body">
+                            <div class="ann-title">Attendance portal updated</div>
+                            <div class="ann-text">Biometric data now syncs in real-time. Check your records and report discrepancies within 48 hours.</div>
+                            <div class="ann-time">Today, 9:00 AM · HOD Office</div>
+                        </div>
+                    </div>
+                    <div class="announce-item">
+                        <div class="announce-icon" style="background:rgba(245,158,11,0.15)">📌</div>
+                        <div class="announce-body">
+                            <div class="ann-title">Internal Exam Schedule Released</div>
+                            <div class="ann-text">Unit-2 internals begin March 28. Download the schedule from the portal.</div>
+                            <div class="ann-time">Yesterday · Exam Cell</div>
+                        </div>
+                    </div>
+                    <div class="announce-item">
+                        <div class="announce-icon" style="background:rgba(34,211,165,0.15)">🎓</div>
+                        <div class="announce-body">
+                            <div class="ann-title">NEXATHON 2.0 – Results Out!</div>
+                            <div class="ann-text">Congratulations to all participants. Results published on the main portal.</div>
+                            <div class="ann-time">Mar 20 · Events Dept</div>
+                        </div>
+                    </div>
+                    <div class="announce-item">
+                        <div class="announce-icon" style="background:rgba(167,139,250,0.15)">🔒</div>
+                        <div class="announce-body">
+                            <div class="ann-title">Library Card Renewal</div>
+                            <div class="ann-text">Renew your library card before March 31 to retain borrowing privileges.</div>
+                            <div class="ann-time">Mar 18 · Library</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /content -->
+    </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+// ── Session check ──
+const enroll = sessionStorage.getItem("enroll") || "12345";
+document.getElementById("enrollDisplay").textContent = enroll;
+document.getElementById("greetName").textContent = "Student " + enroll;
+document.getElementById("sidebarName").textContent = "Student " + enroll;
+document.getElementById("avatarInitials").textContent = enroll.slice(-2);
+
+// Today's date
+const today = new Date();
+document.getElementById("todayDate").textContent = today.toLocaleDateString("en-IN", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
+
+// ── Subjects ──
+const subjects = [
+    { name: "Data Structures",   code:"CS301", pct: 88, classes:"44/50", color:"var(--cyan)" },
+    { name: "Computer Networks", code:"CS302", pct: 75, classes:"36/48", color:"var(--green)" },
+    { name: "DBMS",              code:"CS303", pct: 92, classes:"46/50", color:"var(--amber)" },
+    { name: "Operating Systems", code:"CS304", pct: 68, classes:"34/50", color:"var(--red)" },
+    { name: "Math – IV",         code:"MA401", pct: 80, classes:"40/50", color:"var(--purple)" },
+];
+const subEl = document.getElementById("subjects");
+subjects.forEach(s => {
+    const color = s.pct >= 75 ? s.color : "var(--red)";
+    subEl.innerHTML += `
+    <div class="subject-row">
+        <div class="subject-dot" style="background:${color}"></div>
+        <div class="subject-name">${s.name}<br><span style="font-size:11px;color:var(--muted)">${s.code}</span></div>
+        <div class="subject-mini-bar"><div class="subject-mini-fill" style="width:${s.pct}%;background:${color}"></div></div>
+        <div class="subject-classes" style="min-width:48px;text-align:right">${s.classes}</div>
+        <div class="subject-pct" style="color:${color}">${s.pct}%</div>
+    </div>`;
+});
+
+// ── Timetable ──
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+const timetable = {
+    Mon: [
+        {time:"8:30–9:20", subj:"Data Structures", room:"CS Lab 1", current:true},
+        {time:"9:20–10:10",subj:"Maths IV",        room:"Room 204"},
+        {time:"10:30–11:20",subj:"DBMS",           room:"Room 202"},
+        {time:"11:20–12:10",subj:"Networks",        room:"Room 205"},
+        {time:"1:00–3:00", subj:"DS Lab",           room:"CS Lab 2"},
+    ],
+    Tue: [
+        {time:"8:30–9:20", subj:"OS",              room:"Room 201"},
+        {time:"9:20–10:10",subj:"Networks",        room:"Room 205"},
+        {time:"10:30–11:20",subj:"Data Structures",room:"Room 203"},
+        {time:"11:20–12:10",subj:"DBMS",           room:"Room 202"},
+        {time:"1:00–3:00", subj:"Networks Lab",    room:"Net Lab"},
+    ],
+    Wed: [
+        {time:"8:30–9:20", subj:"Maths IV",        room:"Room 204"},
+        {time:"9:20–10:10",subj:"OS",              room:"Room 201"},
+        {time:"10:30–11:20",subj:"DBMS",           room:"Room 202"},
+        {time:"11:20–12:10",subj:"Data Structures",room:"Room 203"},
+        {time:"1:00–3:00", subj:"DBMS Lab",        room:"DB Lab"},
+    ],
+    Thu: [
+        {time:"8:30–9:20", subj:"Networks",        room:"Room 205"},
+        {time:"9:20–10:10",subj:"Data Structures", room:"Room 203"},
+        {time:"10:30–11:20",subj:"Maths IV",       room:"Room 204"},
+        {time:"11:20–12:10",subj:"OS",             room:"Room 201"},
+        {time:"1:00–3:00", subj:"OS Lab",          room:"CS Lab 1"},
+    ],
+    Fri: [
+        {time:"8:30–9:20", subj:"DBMS",            room:"Room 202"},
+        {time:"9:20–10:10",subj:"Maths IV",        room:"Room 204"},
+        {time:"10:30–11:20",subj:"OS",             room:"Room 201"},
+        {time:"11:20–12:10",subj:"Networks",       room:"Room 205"},
+        {time:"1:00–3:00", subj:"Mini Project",    room:"Project Lab"},
+    ],
+};
+const todayName = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][today.getDay()];
+const activeDayIdx = days.includes(todayName) ? days.indexOf(todayName) : 0;
+
+const tabsEl = document.getElementById("dayTabs");
+const gridEl = document.getElementById("timetableGrid");
+
+function renderDay(day, idx) {
+    tabsEl.querySelectorAll(".day-tab").forEach(t => t.classList.remove("active"));
+    tabsEl.querySelectorAll(".day-tab")[idx].classList.add("active");
+    gridEl.innerHTML = "";
+    (timetable[day] || []).forEach(p => {
+        gridEl.innerHTML += `
+        <div class="period-card ${p.current && day === todayName ? 'current' : ''}">
+            <div class="period-time">${p.time}</div>
+            <div class="period-subj">${p.subj}</div>
+            <div class="period-room">${p.room}</div>
+            ${p.current && day === todayName ? '<div class="now-label">NOW</div>' : ''}
+        </div>`;
+    });
+}
+
+days.forEach((d, i) => {
+    const tab = document.createElement("div");
+    tab.className = "day-tab";
+    tab.textContent = d;
+    tab.addEventListener("click", () => renderDay(d, i));
+    tabsEl.appendChild(tab);
+});
+renderDay(days[activeDayIdx], activeDayIdx);
+
+// ── Voting ──
+const voteData = [
+    { label: "CSE Department",   pct: 42 },
+    { label: "ECE Department",   pct: 31 },
+    { label: "Mechanical Dept",  pct: 27 },
+];
+const voteEl = document.getElementById("voteOptions");
+voteData.forEach(v => {
+    voteEl.innerHTML += `
+    <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="radio" name="vote" value="${v.label}" style="accent-color:var(--cyan)"> ${v.label}
+            </label>
+            <span style="color:var(--muted)">${v.pct}%</span>
+        </div>
+        <div style="height:5px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden;">
+            <div style="width:${v.pct}%;height:100%;background:var(--cyan);border-radius:4px;"></div>
+        </div>
+    </div>`;
+});
+
+function castVote(btn) {
+    const chosen = document.querySelector('input[name="vote"]:checked');
+    if (!chosen) { alert("Please select an option first!"); return; }
+    btn.textContent = "✔ Vote Cast!";
+    btn.style.background = "var(--green)";
+    btn.disabled = true;
+}
+</script>
+</body>
+</html>

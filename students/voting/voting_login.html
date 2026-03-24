@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>voting
+
+    </title>
+    <style>
+        body {
+            display: flex;
+            background: linear-gradient(90deg, #c21e65, #d100d1, #023e7d);
+            color: white;
+            font-family: 'Syne', sans-serif;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #voting {
+            
+            box-shadow:
+                0 0 5px rgb(79, 241, 79),
+                0 0 5px rgb(79, 241, 79),
+                0 0 5px rgb(79, 241, 79),
+                0 0 5px rgb(79, 241, 79);
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+            width: 350px;
+            height: 250px;
+            background-color: rgba(225, 225, 225, 0.15);
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            
+        }
+        td,tr{
+            padding-top: 20px;
+        }
+        input{
+            width: 200px;
+            height: 30px;
+            background-color: rgba(225, 225, 225, 0.15);
+            font-size: 18px;
+            font-weight: 500;
+            border: none;
+            border-radius: 50px;
+        }
+        button{
+            margin-top: 10px;
+           width: 100px;
+            height: 30px;
+            background-color: rgba(225, 225, 225, 0.15);
+            font-size: 18px;
+            font-weight: 500;
+            border: none;
+            border-radius: 50px;
+        }
+    </style>
+</head>
+<body>
+    <center><div id="voting">
+        <table>
+            <tr><td>Enroll</td><td><input type="text"></td></tr>
+            <tr><td>Birth Date</td><td><input type="date"></td></tr>
+        </table>
+        <button onclick="next()">Next</button>
+    </div></center>
+    <script>
+        function next(){
+            window.location.href = "voting_page.html";
+        }
+    </script>
+</body>
+</html>
